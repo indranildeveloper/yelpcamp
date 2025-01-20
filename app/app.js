@@ -2,8 +2,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
 import mongoose from "mongoose";
+import morgan from "morgan";
+import ejsMate from "ejs-mate";
 import methodOverride from "method-override";
-import Campground from "./models/Campground.js";
+import Campground from "../models/Campground.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,10 +19,12 @@ db.once("open", () => {
 
 const app = express();
 
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
   res.render("home");

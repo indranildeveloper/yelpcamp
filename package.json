@@ -2,14 +2,16 @@
   "name": "yelpcamp",
   "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node app/app.js",
+    "dev": "nodemon app/app.js"
   },
   "dependencies": {
     "ejs": "^3.1.10",
+    "ejs-mate": "^4.0.0",
     "express": "^4.21.2",
     "method-override": "^3.0.0",
-    "mongoose": "^8.9.5"
+    "mongoose": "^8.9.5",
+    "morgan": "^1.10.0"
   },
   "packageManager": "yarn@4.5.2",
   "devDependencies": {
