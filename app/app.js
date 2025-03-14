@@ -6,9 +6,11 @@ import morgan from "morgan";
 import ejsMate from "ejs-mate";
 import methodOverride from "method-override";
 import Campground from "../models/Campground.js";
+import Review from "../models/Review.js";
 import ExpressError from "../utils/ExpressError.js";
 import asyncHandler from "../utils/expressAsyncHandler.js";
 import { campgroundValidatorSchema } from "../validators/campgroundValidator.js";
+import { reviewValidatorSchema } from "../validators/reviewValidator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +33,17 @@ app.use(morgan("dev"));
 
 const validateCampground = (req, res, next) => {
   const { error } = campgroundValidatorSchema.validate(req.body);
+
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+const validateReview = (req, res, next) => {
+  const { error } = reviewValidatorSchema.validate(req.body);
 
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
@@ -69,7 +82,9 @@ app.post(
 app.get(
   "/campgrounds/:id",
   asyncHandler(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
+    const campground = await Campground.findById(req.params.id).populate(
+      "reviews"
+    );
     res.render("campgrounds/show", { campground });
   })
 );
@@ -101,6 +116,21 @@ app.delete(
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect("/campgrounds");
+  })
+);
+
+app.post(
+  "/campgrounds/:campgroundId/reviews",
+  validateReview,
+  asyncHandler(async (req, res) => {
+    const { campgroundId } = req.params;
+    const campground = await Campground.findById(campgroundId);
+    const review = new Review(req.body.review);
+    campground.reviews.push(review);
+    await review.save();
+    await campground.save();
+
+    res.redirect(`/campgrounds/${campground._id}`);
   })
 );
 
