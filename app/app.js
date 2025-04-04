@@ -1,6 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
+import session from "express-session";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import ejsMate from "ejs-mate";
@@ -21,6 +22,17 @@ db.once("open", () => {
 
 const app = express();
 
+const sessionOptions = {
+  secret: "thisisasecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views"));
@@ -28,6 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "../public")));
+app.use(session(sessionOptions));
 
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:campgroundId/reviews", reviewRoutes);
