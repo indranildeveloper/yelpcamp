@@ -380,6 +380,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"connect-flash@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "connect-flash@npm:0.1.1"
+  checksum: 10c0/43c1c62ed26714b27efad30807e70637a651ccd764a6bfd485a7d93f2e009cf7c4c9fab52e8d583a0e40a799558b987b616bb5150f72d07baf3ea14f77cc881d
+  languageName: node
+  linkType: hard
+
 "content-disposition@npm:^1.0.0":
   version: 1.0.0
   resolution: "content-disposition@npm:1.0.0"
@@ -2119,6 +2126,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "yelpcamp@workspace:."
   dependencies:
+    connect-flash: "npm:^0.1.1"
     ejs: "npm:^3.1.10"
     ejs-mate: "npm:^4.0.0"
     express: "npm:^5.1.0"

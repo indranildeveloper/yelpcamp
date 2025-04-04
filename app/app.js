@@ -3,12 +3,14 @@ import { fileURLToPath } from "url";
 import express from "express";
 import session from "express-session";
 import mongoose from "mongoose";
+import flash from "connect-flash";
 import morgan from "morgan";
 import ejsMate from "ejs-mate";
 import methodOverride from "method-override";
 import ExpressError from "../utils/ExpressError.js";
 import campgroundRoutes from "../routes/campgroundRoutes.js";
 import reviewRoutes from "../routes/reviewRoutes.js";
+import { flashMessage } from "../middlewares/flashMessage.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +43,9 @@ app.use(methodOverride("_method"));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(session(sessionOptions));
+app.use(flash());
+
+app.use(flashMessage);
 
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:campgroundId/reviews", reviewRoutes);
