@@ -2,15 +2,17 @@ import express from "express";
 import asyncHandler from "../utils/expressAsyncHandler.js";
 import Campground from "../models/Campground.js";
 import { validateCampground } from "../middlewares/validateCampground.js";
+import { isAuthenticated } from "../middlewares/isAuthenticated.js";
 
 const router = express.Router();
 
-router.get("/new", (req, res) => {
+router.get("/new", isAuthenticated, (req, res) => {
   res.render("campgrounds/new");
 });
 
 router.post(
   "/",
+  isAuthenticated,
   validateCampground,
   asyncHandler(async (req, res) => {
     const campground = new Campground(req.body.campground);
@@ -36,6 +38,7 @@ router.get(
 
 router.get(
   "/:id/edit",
+  isAuthenticated,
   asyncHandler(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
@@ -48,6 +51,7 @@ router.get(
 
 router.put(
   "/:id",
+  isAuthenticated,
   validateCampground,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -61,6 +65,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isAuthenticated,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);

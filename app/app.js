@@ -2,6 +2,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
 import session from "express-session";
+import passport from "passport";
+import LocalStrategy from "passport-local";
 import mongoose from "mongoose";
 import flash from "connect-flash";
 import morgan from "morgan";
@@ -10,7 +12,10 @@ import methodOverride from "method-override";
 import ExpressError from "../utils/ExpressError.js";
 import campgroundRoutes from "../routes/campgroundRoutes.js";
 import reviewRoutes from "../routes/reviewRoutes.js";
+import userRoutes from "../routes/userRoutes.js";
 import { flashMessage } from "../middlewares/flashMessage.js";
+import { getCurrentUser } from "../middlewares/getCurrentUser.js";
+import User from "../models/User.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,15 +48,32 @@ app.use(methodOverride("_method"));
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use(flash());
-
 app.use(flashMessage);
+app.use(getCurrentUser);
 
+app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:campgroundId/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+app.get("/fakeuser", async (req, res) => {
+  const user = new User({
+    email: "john@gmail.com",
+    username: "john",
+  });
+  const newUser = await User.register(user, "chicken");
+  res.send(newUser);
 });
 
 app.all(/(.*)/, (req, res, next) => {

@@ -2,20 +2,14 @@
 
 <h1>All Campgrounds</h1>
 <div class="mb-3">
-  <a href="/campgrounds/new" class="btn btn-success"
-    ><i class="fa-solid fa-plus"></i> Add Campground</a
-  >
+  <a href="/campgrounds/new" class="btn btn-success"><i class="fa-solid fa-plus"></i> Add Campground</a>
 </div>
 <div>
   <% for (let campground of campgrounds) { %>
   <div class="card mb-3">
     <div class="row">
       <div class="col-md-4">
-        <img
-          class="img-fluid"
-          src="<%= campground.image %>"
-          alt="<%= campground.title %>"
-        />
+        <img class="img-fluid" src="<%= campground.image %>" alt="<%= campground.title %>" />
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -24,10 +18,8 @@
           <p class="card-text">
             <small class="text-secondary"><%= campground.location %></small>
           </p>
-          <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary"
-            >View <%= campground.title %>
-            <i class="fa-solid fa-arrow-right ms-1"></i
-          ></a>
+          <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">View <%= campground.title %>
+            <i class="fa-solid fa-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>
