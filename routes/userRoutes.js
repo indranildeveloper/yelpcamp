@@ -11,13 +11,19 @@ router.get("/register", (req, res) => {
 
 router.post(
   "/register",
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
     try {
       const { username, email, password } = req.body;
       const user = new User({ email, username });
-      await User.register(user, password);
-      req.flash("success", "Welcome to Yelp Camp!");
-      res.redirect("/campgrounds");
+      const registeredUser = await User.register(user, password);
+      req.login(registeredUser, (error) => {
+        if (error) {
+          return next(error);
+        } else {
+          req.flash("success", "Welcome to Yelp Camp!");
+          res.redirect("/campgrounds");
+        }
+      });
     } catch (error) {
       req.flash("error", error.message);
       res.redirect("/register");
