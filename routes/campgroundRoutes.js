@@ -3,6 +3,7 @@ import asyncHandler from "../utils/expressAsyncHandler.js";
 import Campground from "../models/Campground.js";
 import { validateCampground } from "../middlewares/validateCampground.js";
 import { isAuthenticated } from "../middlewares/isAuthenticated.js";
+import { isAuthorized } from "../middlewares/isAuthorized.js";
 
 const router = express.Router();
 
@@ -40,8 +41,10 @@ router.get(
 router.get(
   "/:id/edit",
   isAuthenticated,
+  isAuthorized,
   asyncHandler(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
     if (!campground) {
       req.flash("error", "Cannot find the campground!");
       return res.redirect("/campgrounds");
@@ -53,6 +56,7 @@ router.get(
 router.put(
   "/:id",
   isAuthenticated,
+  isAuthorized,
   validateCampground,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -67,6 +71,7 @@ router.put(
 router.delete(
   "/:id",
   isAuthenticated,
+  isAuthorized,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
