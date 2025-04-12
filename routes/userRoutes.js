@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import User from "../models/User.js";
 import asyncHandler from "../utils/expressAsyncHandler.js";
+import { storeReturnUrl } from "../middlewares/storeReturnUrl.js";
 
 const router = express.Router();
 
@@ -37,13 +38,16 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
+  storeReturnUrl,
   passport.authenticate("local", {
     failureFlash: true,
     failureRedirect: "/login",
   }),
   (req, res) => {
     req.flash("success", "Welcome back!");
-    res.redirect("/campgrounds");
+    const redirectUrl = res.locals.returnTo || "/campgrounds";
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
   },
 );
 
