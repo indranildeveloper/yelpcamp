@@ -2,6 +2,7 @@
   "name": "yelpcamp",
   "type": "module",
   "author": "Indranil Halder<indranilhalder.dev@gmail.com>",
+  "version": "2.0.0",
   "scripts": {
     "start": "node app/app.js",
     "dev": "nodemon app/app.js"
