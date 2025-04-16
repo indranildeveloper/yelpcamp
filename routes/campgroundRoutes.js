@@ -14,13 +14,18 @@ import {
 
 const router = express.Router();
 
-router.get("/", renderCampgrounds);
+router
+  .route("/")
+  .get(renderCampgrounds)
+  .post(isAuthenticated, validateCampground, createCampground);
 
 router.get("/new", isAuthenticated, renderNewCampgroundForm);
 
-router.post("/", isAuthenticated, validateCampground, createCampground);
-
-router.get("/:id", renderCampground);
+router
+  .route("/:id")
+  .get(renderCampground)
+  .put(isAuthenticated, isAuthorized, validateCampground, editCampground)
+  .delete(isAuthenticated, isAuthorized, deleteCampground);
 
 router.get(
   "/:id/edit",
@@ -28,15 +33,5 @@ router.get(
   isAuthorized,
   renderEditCampgroundForm,
 );
-
-router.put(
-  "/:id",
-  isAuthenticated,
-  isAuthorized,
-  validateCampground,
-  editCampground,
-);
-
-router.delete("/:id", isAuthenticated, isAuthorized, deleteCampground);
 
 export default router;

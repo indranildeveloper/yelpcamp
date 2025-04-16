@@ -1,7 +1,5 @@
 import express from "express";
 import passport from "passport";
-import User from "../models/User.js";
-import asyncHandler from "../utils/expressAsyncHandler.js";
 import { storeReturnUrl } from "../middlewares/storeReturnUrl.js";
 import {
   loginUser,
@@ -13,21 +11,19 @@ import {
 
 const router = express.Router();
 
-router.get("/register", renderRegisterForm);
+router.route("/register").get(renderRegisterForm).post(registerUser);
 
-router.post("/register", registerUser);
-
-router.get("/login", renderLoginForm);
-
-router.post(
-  "/login",
-  storeReturnUrl,
-  passport.authenticate("local", {
-    failureFlash: true,
-    failureRedirect: "/login",
-  }),
-  loginUser,
-);
+router
+  .route("/login")
+  .get(renderLoginForm)
+  .post(
+    storeReturnUrl,
+    passport.authenticate("local", {
+      failureFlash: true,
+      failureRedirect: "/login",
+    }),
+    loginUser,
+  );
 
 router.get("/logout", logoutUser);
 

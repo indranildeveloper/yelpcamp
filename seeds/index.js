@@ -25,7 +25,7 @@ const seedDB = async () => {
       title: `${pickRandomElement(descriptors)} ${pickRandomElement(places)}`,
       location: `${cities[randomThousand].city}, ${cities[randomThousand].state}`,
       image: `https://picsum.photos/400?random=${Math.random()}`,
-      author: "67fa1ae91850f500b0644cc4",
+      author: "67ffc3aa0f941232fb5f4b5f",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis feugiat efficitur tellus, non ullamcorper orci. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce dapibus varius velit. Donec tempor ipsum vel finibus cursus. Nullam euismod, magna ut faucibus fermentum, quam neque ornare ante, placerat tempor tortor sapien in nibh. Maecenas ultrices in elit sed gravida. Aliquam eget dui libero. Donec ac odio et enim tincidunt tincidunt. Praesent aliquam ullamcorper arcu in porta. Pellentesque ut neque velit.",
       price: randomPrice,
