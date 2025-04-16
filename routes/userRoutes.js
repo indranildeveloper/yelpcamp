@@ -3,38 +3,21 @@ import passport from "passport";
 import User from "../models/User.js";
 import asyncHandler from "../utils/expressAsyncHandler.js";
 import { storeReturnUrl } from "../middlewares/storeReturnUrl.js";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+  renderLoginForm,
+  renderRegisterForm,
+} from "../controllers/userControllers.js";
 
 const router = express.Router();
 
-router.get("/register", (req, res) => {
-  res.render("users/register");
-});
+router.get("/register", renderRegisterForm);
 
-router.post(
-  "/register",
-  asyncHandler(async (req, res, next) => {
-    try {
-      const { username, email, password } = req.body;
-      const user = new User({ email, username });
-      const registeredUser = await User.register(user, password);
-      req.login(registeredUser, (error) => {
-        if (error) {
-          return next(error);
-        } else {
-          req.flash("success", "Welcome to Yelp Camp!");
-          res.redirect("/campgrounds");
-        }
-      });
-    } catch (error) {
-      req.flash("error", error.message);
-      res.redirect("/register");
-    }
-  }),
-);
+router.post("/register", registerUser);
 
-router.get("/login", (req, res) => {
-  res.render("users/login");
-});
+router.get("/login", renderLoginForm);
 
 router.post(
   "/login",
@@ -43,22 +26,9 @@ router.post(
     failureFlash: true,
     failureRedirect: "/login",
   }),
-  (req, res) => {
-    req.flash("success", "Welcome back!");
-    const redirectUrl = res.locals.returnTo || "/campgrounds";
-    delete req.session.returnTo;
-    res.redirect(redirectUrl);
-  },
+  loginUser,
 );
 
-router.get("/logout", (req, res, next) => {
-  req.logOut(function (error) {
-    if (error) {
-      return next(error);
-    }
-    req.flash("success", "Goodbye!");
-    res.redirect("/campgrounds");
-  });
-});
+router.get("/logout", logoutUser);
 
 export default router;
