@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import { validateCampground } from "../middlewares/validateCampground.js";
 import { isAuthenticated } from "../middlewares/isAuthenticated.js";
 import { isAuthorized } from "../middlewares/isAuthorized.js";
@@ -11,13 +12,21 @@ import {
   renderEditCampgroundForm,
   renderNewCampgroundForm,
 } from "../controllers/campgroundControllers.js";
+import { storage } from "../cloudinary/cloudinary.js";
+
+const upload = multer({ storage });
 
 const router = express.Router();
 
 router
   .route("/")
   .get(renderCampgrounds)
-  .post(isAuthenticated, validateCampground, createCampground);
+  // .post(isAuthenticated, validateCampground, createCampground)
+  .post(upload.array("image"), (req, res) => {
+    console.log("body:--->", req.body);
+    console.log("files:--->", req.files);
+    res.send("That works!");
+  });
 
 router.get("/new", isAuthenticated, renderNewCampgroundForm);
 
