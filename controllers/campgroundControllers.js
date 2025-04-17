@@ -12,6 +12,10 @@ export const renderNewCampgroundForm = (req, res) => {
 
 export const createCampground = asyncHandler(async (req, res) => {
   const campground = new Campground(req.body.campground);
+  campground.images = req.files.map((file) => ({
+    url: file.path,
+    fileName: file.filename,
+  }));
   campground.author = req.user._id;
   await campground.save();
   req.flash("success", "Successfully created a new campground!");

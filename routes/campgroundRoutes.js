@@ -21,12 +21,17 @@ const router = express.Router();
 router
   .route("/")
   .get(renderCampgrounds)
-  // .post(isAuthenticated, validateCampground, createCampground)
-  .post(upload.array("image"), (req, res) => {
-    console.log("body:--->", req.body);
-    console.log("files:--->", req.files);
-    res.send("That works!");
-  });
+  .post(
+    isAuthenticated,
+    upload.array("image"),
+    validateCampground,
+    createCampground,
+  );
+// .post(upload.array("image"), (req, res) => {
+//   console.log("body:--->", req.body);
+//   console.log("files:--->", req.files);
+//   res.send("That works!");
+// });
 
 router.get("/new", isAuthenticated, renderNewCampgroundForm);
 
