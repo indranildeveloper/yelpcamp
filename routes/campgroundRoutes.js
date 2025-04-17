@@ -27,18 +27,19 @@ router
     validateCampground,
     createCampground,
   );
-// .post(upload.array("image"), (req, res) => {
-//   console.log("body:--->", req.body);
-//   console.log("files:--->", req.files);
-//   res.send("That works!");
-// });
 
 router.get("/new", isAuthenticated, renderNewCampgroundForm);
 
 router
   .route("/:id")
   .get(renderCampground)
-  .put(isAuthenticated, isAuthorized, validateCampground, editCampground)
+  .put(
+    isAuthenticated,
+    isAuthorized,
+    upload.array("image"),
+    validateCampground,
+    editCampground,
+  )
   .delete(isAuthenticated, isAuthorized, deleteCampground);
 
 router.get(
