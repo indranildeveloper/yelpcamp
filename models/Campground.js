@@ -3,17 +3,21 @@ import Review from "./Review.js";
 
 const Schema = mongoose.Schema;
 
+const CampgroundImageSchema = new Schema({
+  url: String,
+  fileName: String,
+});
+
+CampgroundImageSchema.virtual("thumbnail").get(function () {
+  return this.url.replace("/upload", "/upload/w_200");
+});
+
 const CampgroundSchema = new Schema({
   title: {
     type: String,
   },
   images: {
-    type: [
-      {
-        url: String,
-        fileName: String,
-      },
-    ],
+    type: [CampgroundImageSchema],
   },
   price: {
     type: Number,
