@@ -1,5 +1,6 @@
 import Campground from "../models/Campground.js";
 import asyncHandler from "../utils/expressAsyncHandler.js";
+import { cloudinary } from "../cloudinary/cloudinary.js";
 
 export const renderCampgrounds = asyncHandler(async (req, res) => {
   const campgrounds = await Campground.find({});
@@ -54,6 +55,14 @@ export const editCampground = asyncHandler(async (req, res) => {
   }));
   campground.images.push(...images);
   await campground.save();
+  if (req.body.deleteImages) {
+    for (let fileName of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(fileName);
+    }
+    await campground.updateOne({
+      $pull: { images: { fileName: { $in: req.body.deleteImages } } },
+    });
+  }
   req.flash("success", "Successfully updated campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 });
