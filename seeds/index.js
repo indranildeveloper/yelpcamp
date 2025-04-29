@@ -30,7 +30,7 @@ const seedDB = async () => {
           fileName: crypto.randomUUID(),
         },
       ],
-      author: "68036f9ea41ea5ae612c6a3d",
+      author: "68110502d61d2b986dbb391b",
       geometry: {
         type: "Point",
         coordinates: [
