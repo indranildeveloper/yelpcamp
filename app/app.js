@@ -10,6 +10,8 @@ import flash from "connect-flash";
 import morgan from "morgan";
 import ejsMate from "ejs-mate";
 import methodOverride from "method-override";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 import ExpressError from "../utils/ExpressError.js";
 import campgroundRoutes from "../routes/campgroundRoutes.js";
 import reviewRoutes from "../routes/reviewRoutes.js";
@@ -36,6 +38,7 @@ const sessionOptions = {
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
+    // secure: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
@@ -51,6 +54,9 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
+
+// app.use(helmet({ contentSecurityPolicy: false }));
+// app.use(mongoSanitize({ allowDots: true, replaceWith: "_" }));
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
